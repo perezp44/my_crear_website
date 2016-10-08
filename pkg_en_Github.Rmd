@@ -1,0 +1,43 @@
+---
+title: "Alojando el pkg en Github"
+author: "Pedro J. Perez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+<br>
+
+
+## Alojando el pkg en Github  
+
+
+Lo primero es crear un nuevo repo en tu cuenta en Github. Al repo lo llamaremos igual que nuestro package `pkg4albacete`. Obviamente, has de tener cuenta en Github.  
+
+Una vez has creado el repo `pkg4albacete` en Github tenemos que "llenarlo" con todos los ficheros y carpetas que tenemos en `./pkg4albacete/`; para ello usaremos `Git Bash`:
+
+
+0) En Github crear un repo que se llame igual que tu package. En nuestro caso `pkg4albacete`   
+1) en Git Bash te situas en la carpeta del package. en mi caso con:   `cd c:/Users/perezp/Desktop/a_GIT_2016/pkg4albacete`      
+2) Inicializas el repo vacio con :  `git init`   
+3) Añades los archivos al repo: `git add .`    
+4) Commit inicial: `git commit --all --message "Creando el REPO"`    
+5) `git remote add origin https://github.com/perezp44/personal.pjp.git`     
+6) `git push -u origin master`  
+
+<br>
+
+### Para instalar `pkg4albacete` desde Github
+
+1)  devtools::install_github("perezp44/pkg4albacete"")   
+2) library(pkg4albacete)
+
+
+
+
+<br>
+<br>
+<br>

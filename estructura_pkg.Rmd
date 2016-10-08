@@ -1,0 +1,39 @@
+---
+title: "Estructura básica de un R package"
+author: "Pedro J. Pérez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+<br>
+
+Podemos pensar que es un package es un conjunto de archivos dentro de una carpeta. Veamos la estructura típica de esa carpeta:
+
+<br>
+
+![](./imagenes/Estructura_final_pkg4albacete.png)
+
+
+<br>
+
+Tiene bastantes cosas, pero las que nos van a interesar principalmente son 3:
+
+
+  - El fichero `DESCRIPTION`  
+  - El fichero `NAMESPACE`
+  - La carpeta `./R/`  (aquí están alojadas las funciones del package)
+  
+Cambien veremos pero no son necesarias:
+
+  - La carpeta `./data/` (si queremos alojar datos irán aquí
+  - La carpeta `./vignettes/` (si queremos una vignette)
+
+También diremos algo de 
+
+  - La carpeta `./man/`  (aquí estará alojada la documentación de las funciones de nuestro package pero se generará "automáticamente" con otro package: `roxygen`)
+
+<br>

@@ -1,0 +1,25 @@
+---
+title: "Bibliografía"
+author: "Pedro J. Pérez"
+output: html_document
+---
+
+<br>
+
+- Yo "aprendí" a hacer un package leyendo [este post de Hillary Parker](https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/). Es muy corto y preciso, pero claro, no es suficiente para entender.
+
+- Aun más minimalista es Martin Kosínski en su post [What Every R Package Must (REALLY) Contain?](https://www.r-bloggers.com/what-every-r-package-must-really-contain-an-example-on-the-erum2016-package/). Para hacer un package realmente sólo es necesario *"A DESCRIPTION file, and that’s it"*
+
+- Si quieres entenderlo "todo" necesitas [este libro de Hadley Wickham](http://r-pkgs.had.co.nz/)
+
+- Si quieres una cosa intermedia y que a mí me ayudo mucho mira lo de [Karl Broman](http://kbroman.org/pkg_primer/)
+
+- La biblia o documentación oficial está en [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) 
+
+
+<br>
+
+Mi recomendación: leer primero à la Pérez, luego Hillary y luego Broman (Broman no usa devtools ni Rproject, así que a veces explica alguna cosa de forma diferente). Bromam lo explica muy bien todo. Si quieres profundizar en algo, necesitas a Hadley.
+
+
+Good Luck!!!

@@ -1,0 +1,126 @@
+---
+title: "Creacion de websites con RStudio"
+author: "Pedro J. Perez"
+date: "8 de octubre de 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+You can render collections of R Markdown documents as a website with `rmarkdown::render_site`. En realidad lo puedes hacer desde RStudio con `Build>Build all`
+
+Lo que tienes que tener es un fichero `_site.yml` y luego un grupo de ficheros .Rmd. Al menos tiene que haber un fichero .Rmd (el primero) que se llame index.Rmd
+
+
+**\_site.yml**
+
+```yaml
+name: "my-website"
+navbar:
+  title: "tutorial4Albacete"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+    - text: "Pasos"
+      href: pasos.html
+    - text: "Bibliografía"
+      href: bibliografia.html
+```
+
+
+
+**index.Rmd**
+
+```yaml
+---
+title: "Tutorial para crear R packages"
+author: "Pedro J. Perez"
+output:
+  html_document:
+    toc: false
+    toc_float: false
+---
+
+Este repo contiene un tutorial que muestra el proceso de creación de un R package que sirva de apoyo para una asignatura en la que se use R.  El tutorial se preparo para las [8 Jornadas de Usuarios de R](http://r-es.org/8jornadasR/) (Albacete 2016)
+
+## Objetivo 
+
+```
+
+
+
+
+## Mejorando la web un poco
+
+**\_site.yml**
+
+
+```yaml
+name: "my-website"
+navbar:
+  title: "tutorial4Albacete"
+  type: inverse
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Preparar PC"
+      href: preparar_pc.html
+    - text: "Estructura pkg"
+      href: estructura_pkg.html      
+    - text: "Pasos"
+      href: pasos.html
+    - text: "Pkg en Github"
+      href: pkg_en_Github.html      
+    - text: "Bibliografía"
+      href: bibliografia.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/perezp44/prueba3
+
+output_dir: "docs"  
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+    include:
+      after_body: footer.html
+    css: styles.css
+```
+
+
+El fichero `footer.html`
+
+```yaml
+<footer class="footer">
+  <div class="text-muted">-----</div>
+  <div class="text-muted"><strong>This Tutorial</strong> is created by <a href="http://perezp44.github.io">Pedro J. Pérez</a>. &copy;  2016. If you found any BUGS please report them <a href="https://github.com/perezp44/prueba3/issues">here</a>.</div>
+</footer>
+```
+
+
+
+El fichero `styles.css`
+
+```yaml
+blockquote {
+  font-style: italic
+}
+```
+
+
+**IMPORTANTE**. Para que puedas alojar la pagina web en la master branch de Github has de:
+
+1) Build the web page en la carpeta `docs` (Esto se consigue poniendo en el archivo `_site.yml` una linea con: `output_dir: "docs" `)
+2) Poner dentro de la  carpeta `docs` un archivo vacio `.nojekyll`
+
+
+Si quieres alojar la web en una gh-branche entonces has de poner en el archivo `_site.yml` una linea con: `output_dir: "." `
+
+## Biblio
+
+
+https://jabranham.com/blog/2016/01/making-academic-website.html

@@ -1,0 +1,75 @@
+---
+title: "Preparación del ordenador"
+author: "Pedro J. Pérez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo = F, message = F }
+library(dplyr)
+library(personal.pjp)
+library(tidyr)
+library(readr)
+library(purrr)
+library(ggplot2)
+library(broom)
+
+library(DT)
+library(xtable)
+library(pander)
+library(knitr)
+```
+
+<br>
+
+
+
+Para poder construir nuestro package necesitamos tener instalado lo siguiente:
+
+- Obviamente se necesita tener instalado R y RStudio  
+
+- Los siguientes packages:  `install.packages(c("devtools", "roxygen2", "knitr"))`
+
+Además, según tu sistema operativo necesitas (esto está fusilado de [este libro](http://r-pkgs.had.co.nz/))
+
+
+* On Windows, download and install [Rtools](http://cran.r-project.org/bin/windows/Rtools/). 
+  NB: this is not an R package!
+
+* On Mac, make sure you have either XCode (available for free in the App Store)
+  or the ["Command Line Tools for Xcode"](http://developer.apple.com/downloads).
+  You'll need to have a (free) Apple ID.
+
+* On Linux, make sure you've installed not only R, but also the R development
+  tools. For example, on Ubuntu (and Debian) you need to install the 
+  `r-base-dev` package.
+
+
+
+Para chequear que tenéis Rtools instalado (si es que trabajáis en un PC con Windows) podéis hacerlo  con `has_devel()` así:
+
+
+```{r, eval = F}
+library(devtools)
+has_devel()
+#> '/Library/Frameworks/R.framework/Resources/bin/R' --vanilla CMD SHLIB foo.c 
+#> 
+#> clang -I/Library/Frameworks/R.framework/Resources/include -DNDEBUG 
+#>   -I/usr/local/include -I/usr/local/include/freetype2 -I/opt/X11/include
+#>   -fPIC  -Wall -mtune=core2 -g -O2  -c foo.c -o foo.o
+#> clang -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup
+#>   -single_module -multiply_defined suppress -L/usr/local/lib -o foo.so foo.o 
+#>   -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework 
+#>   -Wl,CoreFoundation
+[1] TRUE
+```
+
+
+Si todo esta correcto recibiréis un mensaje de `[1] TRUE`
+
+<br>
+

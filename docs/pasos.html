@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Pedro J. Pérez" />
+
+
+<title>Proceso de creación del package</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/textmate.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">tutorial4Albacete</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="preparar_pc.html">Preparar PC</a>
+</li>
+<li>
+  <a href="estructura_pkg.html">Estructura pkg</a>
+</li>
+<li>
+  <a href="pasos.html">Pasos</a>
+</li>
+<li>
+  <a href="pkg_en_Github.html">Pkg en Github</a>
+</li>
+<li>
+  <a href="bibliografia.html">Bibliografía</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/perezp44/prueba3">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Proceso de creación del package</h1>
+<h4 class="author"><em>Pedro J. Pérez</em></h4>
+<h4 class="date"><em>8 de octubre de 2016</em></h4>
+
+</div>
+
+
+<p><br></p>
+<hr />
+<p>Dividiré el proceso de creación del package en 9 pasos.</p>
+<div id="proceso-de-creacion-del-pkg" class="section level2">
+<h2>Proceso de creación del pkg</h2>
+<p>Bueno, pues vamos allá: a hacer el package, le pondré el nombre <code>pkg4albacete</code> y muchas veces me referiré a él como “nuestro package”.</p>
+<p><br></p>
+<div id="er-paso-recopilando-los-elementos-que-metere-en-el-package" class="section level3">
+<h3>1<sup>er</sup> paso: recopilando los elementos que meteré en el package</h3>
+<p>Lógicamente, supondremos que ya tenemos los elementos que nutrirán el package. En nuestro caso 2 ficheros de datos en formato <code>.rda</code>, dos funciones (cada una en un fichero <code>.R</code>)</p>
+<p><br></p>
+</div>
+<div id="o-paso-crear-la-estructura-del-package-desde-rstudio" class="section level3">
+<h3>2<sup>o</sup> paso: Crear la estructura del package desde RStudio</h3>
+<p>La estructura del package la crearemos con RStudio, concretamente con la siguiente sucesión de menús/opciones en RStudio: <code>File &gt; New Project &gt; New Directory &gt; Package &gt; package name</code> que puedes ver en los gráficos de más abajo.</p>
+<p><br></p>
+<div id="figures-creando-un-package-gestionado-como-un-rproject-a-traves-de-rstudio" class="section level5">
+<h5>Figures: Creando un package (gestionado como un Rproject) a través de RStudio</h5>
+<p><img src="pasos_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Si has seguido esta ruta de menús/opciones se habrá abierto en RStudio un archivo de una función que te dice <code>Hola</code>, pero también (y más importante) se habrá creado en tu PC (donde tú hayas seleccionado) una nueva carpeta que contendrá la estructura de nuestro package <code>pkg4albacete</code> Ya he dicho que el nombre que he elegido para nuestro package es <code>pkg4albacete</code>. Podemos pensar que la carpeta donde está alojado <code>pkg4albacete</code> es <code>./pkg4albacete/</code></p>
+<p><br></p>
+<p>El contenido inicial de la carpeta <code>pkg4albacete</code> es el siguiente:</p>
+<p><br></p>
+<div class="figure">
+<img src="imagenes/contenido_inicial_pkg4albacete.png" />
+
+</div>
+<p><br></p>
+<p>Vamos a ir modificando/añadiendo elementos a <code>pkg4albacete</code>;concretamente vamos a tener que modificar lo siguiente:</p>
+<ul>
+<li>el archivo <code>NAMESPACE</code><br />
+</li>
+<li>el archivo <code>DESCRIPTION</code><br />
+</li>
+<li>la carpeta <code>./pkg4albacete/R/</code><br />
+</li>
+<li>la carpeta <code>./pkg4albacete/man/</code> (esto lo hará <code>devtools</code>)</li>
+</ul>
+<p>Después crearemos (también a través de <code>devtools</code>) las carpetas:</p>
+<ul>
+<li>la carpeta <code>./pkg4albacete/data/</code></li>
+<li>la carpeta <code>./pkg4albacete/man/</code></li>
+</ul>
+<p><br></p>
+</div>
+</div>
+<div id="er-paso-modificando-el-fichero-description" class="section level3">
+<h3>3<sup>er</sup> paso: Modificando el fichero <code>DESCRIPTION</code></h3>
+<p>El fichero <code>DESCRIPTION</code> , tal y como nos lo ha creado RStudio tiene ésta estructura:</p>
+<pre class="yaml"><code>Package: pkg4albacete
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer &lt;yourself@somewhere.net&gt;
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true</code></pre>
+<p>Lo vamos a modificar usando un editor de texto a algo como:</p>
+<pre class="yaml"><code>Package: pkg4albacete
+Type: Package
+Date: 2016-10-10
+Title: Package para el curso Econometría I de GECO
+Version: 0.1.0
+Author: Pedro J. Pérez &lt;pjperez@uv.es&gt;
+Maintainer: Pedro J. Pérez &lt;pjperez@uv.es&gt;
+Description: Este package se utiliza como apoyo docente al curso
+    de Econometría de la Licenciatura de GECO en la UV
+Imports:
+    dplyr,
+    magrittr
+License: GPL-3
+Encoding: UTF-8
+LazyData: true</code></pre>
+<p>Si os fijáis, hay varios cambios:</p>
+<ul>
+<li><p>He puesto mi nombre y e-mail en <code>Author:</code> y <code>Maintainer</code></p></li>
+<li><p>He añadido <code>Date:</code> y <code>License:</code></p></li>
+<li><p>En <code>Title:</code> debe ir una sola linea con una breve descripción de qué hace el package. <strong>Cuidado!</strong>, no puede acabar con un punto</p></li>
+<li><p>En <code>Description:</code> se puede poner una descripción más larga del package. <strong>Fíjate</strong> que si hay varias lineas, la segunda y siguientes lineas deben llevar una sangría de 4 espacios.</p></li>
+</ul>
+<p>Como <code>Description:</code> only gives you a small amount of space to describe what your package does, I also recommend including a <code>README.md</code> file that goes into much more depth and shows a few examples. Ya lo haremos al subir el package a Github.</p>
+<ul>
+<li>He añadido <code>Imports:</code>. Como tiene varias lineas, la segunda y siguiente tambien van con sangría de 4 espacios</li>
+</ul>
+<p>El campo más complicado de entender es <code>Imports:</code>. Este campo da la lista de R packages que “nuestro package” necesita para poder funcionar (puede que no necesite ninguno). En nuestro caso, una de las funciones que vamos a meter en pkg4albacete necesita funciones de 2 packages: <code>dplyr</code> y <code>magrittr</code>, así que hay que “importarlos”, asegurarse de que están disponibles con <code>Import:</code>.</p>
+<p>Si tu package necesita una versión específica de otro package hazlo así:</p>
+<pre class="yaml"><code>Imports:
+    ggplot2 (&gt;= 0.2),
+    dplyr (&gt;= 0.3.0.1)</code></pre>
+<p>Otra forma de añadir el campo <code>imports</code> es usando el package <code>devtools</code>, concretamente con la instrucción <code>devtools::use_package(&quot;pkg_name&quot;)</code>. Esto modifica automáticamente el campo imports en el fichero <code>DESCRIPTION</code>. Por ejemplo</p>
+<pre class="r"><code>devtools::use_package(&quot;dplyr&quot;) 
+#&gt; Adding dplyr to Imports
+#&gt; Refer to functions with dplyr::fun()</code></pre>
+<p><br></p>
+</div>
+<div id="o-paso-metiendo-nuestros-2-ficheros-de-datos-en-.pkg4albacetedata" class="section level3">
+<h3>4<sup>o</sup> paso: Metiendo nuestros 2 ficheros de datos en <code>./pkg4albacete/data/</code></h3>
+<p>Tenemos 2 ficheros de datos <code>esp.rda</code> y <code>fra.rda</code>que queremos alojar en nuestro package. Los datos están en formato <code>.rda</code> y los podemos en este formato grabar así:</p>
+<pre class="r"><code>dir.create(&quot;./data&quot;)   #- creamos el directorio
+save(my_data, file=&quot;./data/esp.RData&quot;) #- guardamos my_data en formato .RData o .rda</code></pre>
+<p>Para documentar los 2 ficheros de datos puedes crear un sólo fichero llamado <code>data.R</code> y alojarlo en la carpeta <code>./pkg4albacete/R/</code>. El archivo ha de ser algo como:</p>
+<pre class="yaml"><code>#&#39; 13 PIACC variables for SPAIN
+#&#39;
+#&#39; PIACC data for SPAIN. PIACC es el acrónimo de 
+#&#39; Programa para la Evaluación Internacional de las
+#&#39; Competencias de los adultos (PIAAC) de la OCDE. 
+#&#39; Información detallada sobre el programa PIAAC puede encontrarse en su página web
+#&#39; (http://www.oecd.org/skills/piaac/) 
+#&#39; The 13 variables here are as follows:
+#&#39;
+#&#39; @format A data frame with 1991 rows and 13 variables:
+#&#39; \itemize{
+#&#39;   \item CNTRYID: Country ID (ISO 3166, numeric)
+#&#39;   \item SEQID: Sequential ID (randomly derived)
+#&#39;   \item GENDER_R: Person resolved gender from BQ and QC check (derived)
+#&#39;   \item EARNHR: Hourly earnings excluding bonuses for wage and salary earners (derived)
+#&#39;   \item EARNMTH: Monthly earnings excluding bonuses for wage and salary earners (derived)
+#&#39;   \item D_Q16b: Current work - Earnings - Gross pay
+#&#39;   \item EDCAT7: Highest level of formal education obtained (7 categories - derived)
+#&#39;   \item YRSQUAL: Highest level of education obtained imputed into years of education (derived)
+#&#39;   \item C_Q09_C: Current status/work history - Years of paid work during lifetime (top-coded at 47)
+#&#39;   \item C_D05: Current status/work history - Employment status (DERIVED BY CAPI)
+#&#39;   \item J_Q02a: Background - Living with spouse or partner
+#&#39;   \item J_Q04a: Background - Born in country
+#&#39;   \item PVNUM1: Numeracy scale score - Plausible value 1
+#&#39; }
+&quot;esp&quot;
+
+
+#&#39;#&#39; 13 PIACC variables for FRANCE
+#&#39;
+#&#39; PIACC data for FRANCE. PIACC es el acrónimo de 
+#&#39; Programa para la Evaluación Internacional de las
+#&#39; Competencias de los adultos (PIAAC) de la OCDE. 
+#&#39; Información detallada sobre el programa PIAAC puede encontrarse en su página web
+#&#39; (http://www.oecd.org/skills/piaac/) 
+#&#39; The 13 variables here are as follows:
+#&#39;
+#&#39; @format A data frame with 3346 rows and 13 variables:
+#&#39; \itemize{
+#&#39;   \item CNTRYID: Country ID (ISO 3166, numeric)
+#&#39;   \item SEQID: Sequential ID (randomly derived)
+#&#39;   \item GENDER_R: Person resolved gender from BQ and QC check (derived)
+#&#39;   \item EARNHR: Hourly earnings excluding bonuses for wage and salary earners (derived)
+#&#39;   \item EARNMTH: Monthly earnings excluding bonuses for wage and salary earners (derived)
+#&#39;   \item D_Q16b: Current work - Earnings - Gross pay
+#&#39;   \item EDCAT7: Highest level of formal education obtained (7 categories - derived)
+#&#39;   \item YRSQUAL: Highest level of education obtained imputed into years of education (derived)
+#&#39;   \item C_Q09_C: Current status/work history - Years of paid work during lifetime (top-coded at 47)
+#&#39;   \item C_D05: Current status/work history - Employment status (DERIVED BY CAPI)
+#&#39;   \item J_Q02a: Background - Living with spouse or partner
+#&#39;   \item J_Q04a: Background - Born in country
+#&#39;   \item PVNUM1: Numeracy scale score - Plausible value 1
+#&#39; }
+&quot;fra&quot;</code></pre>
+<p>Como ves hay un bloque de “Roxygen comments” (las lineas que empiezan con <code>#'</code>) para cada fichero de datos (esp y fra). Es parecido a documentar las funciones (que veremos luego), sólo que al final has de incluir una linea con el nombre del fichero de datos como character string, en nuestro caso <code>&quot;esp&quot;</code> y <code>&quot;fra&quot;</code></p>
+<p>El fichero de documentación no tiene porque ser tan largo, bastaría con (incluso con menos):</p>
+<pre class="yaml"><code>#&#39; 13 PIACC variables for SPAIN
+#&#39;
+#&#39; PIACC data for SPAIN. PIACC es el acrónimo de 
+&quot;esp&quot;
+
+
+#&#39;#&#39; 13 PIACC variables for FRANCE
+#&#39;
+#&#39; PIACC data for FRANCE. PIACC es el acrónimo de 
+&quot;fra&quot;</code></pre>
+<p>Nosotros creamos ese fichero <code>./pkg4albacete/R/data.R</code> y más adelante haremos uso de <code>devtools</code> que es quien realmente pasará ese fichero a un formato parecido al latex.</p>
+<p>Cuando pkg4albacete esté operativo y alguien se lo instale, podrá cargar y usar los datos que hemos cargado en el nuestro package con:</p>
+<pre class="r"><code>esp &lt;- data(esp)</code></pre>
+<p>Y se podrá ver la información que hemos proporcionado sobre los datos con <code>?esp</code></p>
+<p><br></p>
+</div>
+<div id="o-paso-metiendo-nuestras-2-funciones-en-.pkg4albaceter" class="section level3">
+<h3>5<sup>o</sup> paso: Metiendo nuestras 2 funciones en <code>./pkg4albacete/R/</code></h3>
+<p>Tenemos 2 funciones que queremos alojar en nuestro package. Cada función la tenemos escrita en un fichero <code>.R</code>.</p>
+<p>La primera función la tenemos en el fichero <code>my_fun_1.R</code>. Veámosla:</p>
+<pre class="yaml"><code>my_fun_1 &lt;- function(df, print = FALSE) {
+    result &lt;- df %&gt;% summarise_each(. , funs(mean))
+    return(result)
+}</code></pre>
+<p>La función <code>my_fun_1()</code> tiene como argumento un data.frame y devuelve otro df con las medias de cada una de las columnas del df original. Para que <code>my_fun_1()</code> funcione necesita la función/operador <code>%&gt;%</code> y la función <code>summarise_each()</code> que pertenecen a los packages <code>magritt</code> y <code>dplyr</code> respectivamente; por ello, para que <code>my_fun_1()</code> funcione necesita que “estén” <code>magritt</code> y <code>dplyr</code>, así que tendremos que “importarlos”.</p>
+<p>La segunda función la tenemos en el fichero <code>my_fun_2.R</code>. Veámosla:</p>
+<pre class="yaml"><code>my_fun_2 &lt;- function(x, y) {
+  result &lt;- x + y
+  return(result)
+}</code></pre>
+<p>Esta segunda función es muy sencilla, metes dos números y te devuelve su suma. No necesita ninguna función, solo necesita <code>+</code> de R base. Para que funcione no necesitamos “importar” ningún package, porque siempre que abres RStudio se carga Rbase.</p>
+<p>Tenemos que meter estos 2 ficheros en la carpeta <code>./pkg4albacete/R/</code>. Veamos que hay ahora en <code>./pkg4albacete/R/</code>:</p>
+<p><br></p>
+<div class="figure">
+<img src="imagenes/Contenido_de_R_1.png" />
+
+</div>
+<p><br></p>
+<p>Vemos que hay un archivo llamado <code>hello.R</code>. Es una función de ejemplo/recordatorio que nos ha creado automáticamente RStudio cuando iniciamos nuestro package con el único objetivo de recordarnos que las funciones de nuestro package deben alojarse en el directorio <code>R</code>. Esta función la podemos borrar o dejar, yo la dejaría, siempre es bueno tener a alguien que te diga hola, aunque sea una función (si la borras también hay que borrar el fichero <code>hello.Rd</code> que está en la carpeta donde se guarda la documentación de las funciones <code>.(pkg4albacete/man/</code> “man” se supone que viene de “manuals”)</p>
+<p>Así que podemos borrar el archivo <code>./pkg4albacete/R/hello.R</code> , pero lo que <strong>SÍ</strong> tenemos que hacer es alojar en la carpeta <code>./pkg4albacete/R/</code> los 2 archivos que contienen nuestras funciones. Ahora nos tocará documentar nuestras funciones (no es estrictamente necesario pero …)</p>
+<p><br></p>
+</div>
+<div id="o-paso-documentando-nuestras-2-funciones-en-.pkg4albaceter" class="section level3">
+<h3>6<sup>o</sup> paso: Documentando nuestras 2 funciones en <code>./pkg4albacete/R/</code></h3>
+<p>Es el paso que más me costó entender. ¿Por qué? Pues porque la documentación se tiene que escribir en un formato especial.</p>
+<p>Nosotros vamos a escribir la documentación de nuestras funciones con <strong>roxygen comments</strong>. Lo más llamativo de estos comments es que en lugar de comenzar con <code>#</code> empiezan con <code>#'</code> pero tienen muchas pejigueras. Veamos algunas:</p>
+<p>Por ejemplo, para nuestra función más sencilla <code>my_fun_2</code> si le añadimos roxygen comments (se ponen antes de la función) quedaría como:</p>
+<pre class="yaml"><code>#&#39; Esta función suma 2 números
+#&#39;
+#&#39; @param x Un número
+#&#39; @param y Un número
+#&#39; @return La suma de \code{x} e \code{y}
+#&#39; @examples
+#&#39; my_fun_2(1, 1)
+#&#39; my_fun_2(10, 1)
+#&#39; @export
+
+my_fun_2 &lt;- function(x, y) {
+  result &lt;- x + y
+  return(result)
+} 
+</code></pre>
+<p>Fíjate que <code>@export</code> hará que <code>my_fun_2</code> se “exporte” y pueda ser usado por todo aquel que se instale nuestro package.</p>
+<p>Fíjate que los parámetros <code>x e y</code> se referencian como <code>\code{x}</code> y <code>\code{y}</code>. Si quieres saber todo sobre cómo documentar tus funciones ve <a href="http://r-pkgs.had.co.nz/man.html#roxygen-comments">aquí</a></p>
+<p>Una vez tenemos <code>my_fun_2.R</code> con sus roxygen comments al principio, tendremos que procesar este archivo con el package <code>roxygen</code>; concretamente si ejecutas en RStudio <code>devtools::document()</code> convertirá esos roxygen comments creando un nuevo archivo <code>.Rd</code>, en nuestro caso <code>my_fun_2.Rd</code> que estará alojado en <code>pkg4albacete/man/</code>. (Cuidado: has de ejecutar <code>devtools::document()</code> “desde” <code>pkg4albacete</code>)</p>
+<p>Vamos a documentar <code>my_fun_1</code>:</p>
+<pre class="yaml"><code>#&#39; Esta función coge un df y calcula la media de cada columna
+#&#39;
+#&#39; @param df Un data.fram
+#&#39; @return Un nuevo df con la media de cada columna del df original \code{df} 
+#&#39; @examples
+#&#39; my_fun_1(mtcars)
+#&#39; @export
+
+my_fun_1 &lt;- function(df, print = FALSE) {
+    result &lt;- df %&gt;% summarise_each(. , funs(mean))
+    return(result)
+} 
+</code></pre>
+<p><br></p>
+</div>
+<div id="o-paso-modificando-el-fichero-namespace" class="section level3">
+<h3>7<sup>o</sup> paso: Modificando el fichero <code>NAMESPACE</code></h3>
+<p>Bueno, pues ya casi está, falta modificar el fichero <code>NAMESPACE</code>. Este fichero controla que funciones se exportaran y que funciones de otros packages se importan.</p>
+<p>Si has ejecutado <code>devtools::document()</code> para generar la documentación de las funciones, entonces <code>devtools</code> ya ha modificado el fichero <code>NAMESPACE</code> para que nuestras 2 funciones se “exporten”. <code>devotools</code> sabe que tiene que exportarlas porque se lo hemos dicho en la documentación de la función con <code>@export</code>; por lo tanto si has ejecutado <code>devtools::document()</code>, el fichero <code>NAMESPACE</code> ya incluirá algo como:</p>
+<pre class="yaml"><code># Generated by roxygen2: do not edit by hand
+
+export(my_fun_1)
+export(my_fun_2)</code></pre>
+<p>Si no hubieses ejecutado <code>devtools::document()</code> aún, el fichero <code>NAMESPACE</code> estará como nos lo creo RStudio:</p>
+<pre class="yaml"><code>exportPattern(&quot;^[[:alpha:]]+&quot;)</code></pre>
+<p>Venga, hazlo ya, a documentar tus funciones!!. Incluye <code>@export</code> y ejecuta <code>devtools::document()</code> para que NAMESPACE se ocupe de “exportar” tus funciones</p>
+<p>Ahora nos falta “IMPORTAR” las funciones que nuestro package necesita. En nuestro caso, recordad que my_fun_1 necesitaba <code>%&gt;%</code> del package <code>magrittr</code> y <code>summarize_all()</code> de <code>dplyr</code> ; así que para que my_fun_1 corra hay que importarlas.</p>
+<p>La “mejor” forma de hacerlo es:</p>
+<p>Primero recordar que ya tenemos medio trabajo hecho porque en la <code>DESCRIPTION</code> file pusimos lo siguiente:</p>
+<pre class="yaml"><code>Imports:
+    dplyr,
+    magrittr</code></pre>
+<p>Esto nos aseguraba que quien cargase <code>pkg4albacete</code> también tendría en su PC dplyr y magittr. Es como si hubiesen hecho <code>install.packages(c(&quot;dplyr&quot;,&quot;magrittr&quot;))</code>. ¿Qué nos falta? Pues <code>library()</code> …</p>
+<p>Nos falta “hacer library()” para cargar los paquetes dplyr y magrittr. Para ello tenemos 2 posibilidades: hacerlo con <code>::</code> o “importarlos explícitamente”. Hadley recomienda la primera forma, pero aquí(para hacerlo más sencillo lo haremos de la segunda)</p>
+<ol style="list-style-type: decimal">
+<li>la primera forma (que es la que no vamos a utilizar): con <code>::</code></li>
+</ol>
+<p>Tendríamos que escribir my_fun_1 de esta forma (no muestro los roxygen comments que hay en la parte superior de la función)</p>
+<pre class="yaml"><code>my_fun_1 &lt;- function(df, print = FALSE) {
+  result &lt;- df   magrittr::%&gt;%   dplyr::summarise_each(. , funs(mean))
+  return(result)
+}</code></pre>
+<p>Es decir, llamas a las funciones con <code>package::funcion</code> que en nuestro caso es: <code>magrittr::%&gt;%</code> y <code>dplyr::summarise_each</code></p>
+<ol start="2" style="list-style-type: decimal">
+<li>La segunda forma: “importando” explícitamente las funciones en <code>NAMESPACE</code>. Esto se hace poniendo dos nuevas lineas en nuestro archivo <code>NAMESPACE</code>, <strong>PERO</strong> mejor que lo haga <code>devtools</code> por nosotros; así que aunque nuestro objetivo es modificar <code>NAMESPACE</code> lo que haremos es modificar nuestras funciones y luego llamar a devtools. Bueno, en nuestro caso solo nos hace falta modificar my_fun_1 que necesita 2 funciones de otros packages, porque my_fun_2 no necesita de otros packages.</li>
+</ol>
+<p>Modificaremos <code>my_fun_1</code> para que quede como:</p>
+<pre class="yaml"><code>#&#39; Esta función coge un df y calcula la media de cada columna
+#&#39;
+#&#39; @param df Un data.fram
+#&#39; @return Un nuevo df con la media de cada columna del df original \code{df}
+#&#39; @examples
+#&#39; my_fun_1(mtcars)
+#&#39; @export
+#&#39; @import dplyr
+#&#39; @importFrom magrittr %&gt;%
+
+my_fun_1 &lt;- function(df, print = FALSE) {
+  result &lt;- df %&gt;% summarise_each(. , funs(mean))
+  return(result)
+}</code></pre>
+<p>Fíjate que le he añadido 2 lineas que empiezan por <code>@importFrom</code> y <code>@import</code>. Al final he decidido importar todo dplyr</p>
+<p>Una vez hemos incluido en nuestras funciones lo que necesitamos importar sólo queda que <code>devtools</code> haga el trabajo sucio. ¿Cómo? pues otra vez con <code>devtools::document()</code>. Si ejecutamos esta instrucción, nuestro <code>NAMESPACE</code> quedará como:</p>
+<pre class="yaml"><code># Generated by roxygen2: do not edit by hand
+
+
+export(my_fun_1)
+export(my_fun_2)
+import(dplyr)
+importFrom(magrittr,&quot;%&gt;%&quot;)</code></pre>
+<p><br></p>
+</div>
+<div id="o-paso-creando-una-vignette" class="section level3">
+<h3>8<sup>o</sup> paso: Creando una vignette</h3>
+<p>No hace falta crear una vignette, pero creo que es útil que si el package es para una asignatura, los estudiantes tengan a mano los scripts/materiales que se usan para solucionar/documentar algunas prácticas.</p>
+<p>Las “vignettes” se pueden construir de varias maneras pero lo más fácil es que la estructura nos la cree devtools y luego nosotros ya añadiremos el contenido que queramos (lo escribiremos en formato Rmarkdow). Escribir en Rmarkdown es muy fácil pero necesita del package <code>knitr</code> y del programa <code>pandoc</code>. Afortunadamente cómo estamos creando pkg4albacete con RStudio ya los tenemos instalados.</p>
+<p>Para crear una vignette con devtools sólo hay que ejecutar <code>devtools::use_vignette(&quot;my-vignette&quot;)</code>. Con esta instrucción devtools habrá creado la carpeta <code>./pkg4albacete/vignettes</code> y dentro el archivo <code>my-vignette.Rmd</code></p>
+<p>Fíjate que la extensión del archivo es Rmarkdown <code>.Rmd</code> . Cuando alguien cargue pkg4albacete podrá ver las viñetas de pkg4albacete (de momento sólo hay una) con la instrucción <code>browseVignettes(&quot;pkg4albacete&quot;)</code>. Si queremos mostrar una viñeta concreta, lo podemos hacer con <code>vignette(my-vignette)</code>. Si queremos ver el código de la viñeta lo podemos hacer con <code>edit(vignette(my-vignette))</code></p>
+<p>Lógicamente tendremos que modificar (escribiendo en formato Rmarkdow) <code>my-vignette</code> para que muestre lo que queramos explicar en clase, vamos los contenidos/ejercicios/scripts del curso. Esto es tarea vuestra.</p>
+<p><strong>IMPORTANTE:</strong> Una vez hayamos puesto en nuestra viñeta todo lo que queramos contar, falta “construirla” con la instrucción <code>devtools::build_vignettes()</code></p>
+<p><br></p>
+</div>
+<div id="o-paso-construyendo-building-pkg4albacete" class="section level3">
+<h3>9<sup>o</sup> paso: Construyendo (Building) pkg4albacete</h3>
+<p>Bueno, para mí el package ya esta construido: tengo dentro de la carpeta todo lo que necesito (funciones, documentación, datos, …) pero realmente, aún no es un package operativo, sólo es un carpeta con una estructura concreta y ficheros. Falta “construirlo”, pero eso es lo que hace siempre por nosotros <code>install.packages()</code>.</p>
+<p>En realidad es un poco más complicado …</p>
+<blockquote>
+<p>it really helps to understand the five states a package can be in across its lifecycle: source, bundled, binary, installed and in-memory. (Hadley)</p>
+</blockquote>
+<p>De momento podemos pensar que pkg4albacete está en estado “source”:</p>
+<blockquote>
+<p>A source package is just a directory with components like R/, DESCRIPTION, and so on. (Hadley)</p>
+</blockquote>
+<p>Y lo podemos hacer operativo con <code>install.packages()</code> pero como no está en CRAN, ni en Github (todavía), hay que cargarlo desde LOCAL con:</p>
+<pre class="r"><code>install.packages(&quot;C:/Users/perezp/Desktop/a_GIT_2016/pkg4albacete&quot;, repos = NULL, type=&quot;source&quot;)   
+library(pkg4albacete)</code></pre>
+<p>Fíjate que has de poner la ruta de <code>pkg4albacete</code> en tu ordenador.</p>
+<p>Espero que te haya funcionado. Si ha sido así, ya tienes cargado <code>pkg4albacete</code> y puedes usarlo, por ejemplo:</p>
+<pre class="r"><code>my_fun_2(4,6)           #- usamos my_fun_2() para sumar 2 números
+my_fun_1(mtcars)        #- usamos my_fun_1() para calcular las medias de las columnas de mtcars
+my_fun_1(esp)           #- usamos my_fun_1() para calcular las medias de las variables de esp
+?esp                    #- obtenemos información sobre el df esp
+?my_fun_2               #- obtenemos información sobre el df esp
+browseVignettes(&quot;pkg4albacete&quot;)
+vignette(&quot;my-vignette&quot;)     #- vemos la vignette &quot;my-vignette&quot;</code></pre>
+</div>
+</div>
+
+
+
+
+
+<footer class="footer">
+  <div class="text-muted">-----</div>
+  <div class="text-muted"><strong>This Tutorial</strong> is created by <a href="http://perezp44.github.io">Pedro J. Pérez</a>. &copy;  2016. If you found any BUGS please report them <a href="https://github.com/perezp44/prueba3/issues">here</a>.</div>
+</footer>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
