@@ -121,6 +121,24 @@ blockquote {
 
 Si quieres alojar la web en una gh-branche entonces has de poner en el archivo `_site.yml` una linea con: `output_dir: "." `
 
+
+
+## Cuando vuelvas a construir el website
+
+Cuando vuelvas a construir la website, haz lo siguiente para subir los cambios a Github:   
+
+Mejor hacerlo desde Git Bash:
+
+1) te situas en el directorio correcto con `cd`; generálmente con `cd c:/Users/perezp/Desktop/a_GIT_2016/.... `   
+
+2) `git add .`   añade (staged) todo loq eu has cambiado   
+
+3) `git commit --all --message "Creando el REPO"`    
+
+4) `git push -u origin master`     
+
+
+
 ## Biblio
 
 
