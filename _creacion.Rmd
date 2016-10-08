@@ -114,7 +114,8 @@ blockquote {
 
 **IMPORTANTE**. Para que puedas alojar la pagina web en la master branch de Github has de:
 
-1) Build the web page en la carpeta `docs` (Esto se consigue poniendo en el archivo `_site.yml` una linea con: `output_dir: "docs" `)
+1) Build the web page en la carpeta `docs` (Esto se consigue poniendo en el archivo `_site.yml` una linea con: `output_dir: "docs" `)  
+
 2) Poner dentro de la  carpeta `docs` un archivo vacio `.nojekyll`
 
 
