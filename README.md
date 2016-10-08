@@ -27,4 +27,4 @@ Se hará de la forma más rápida y simple, que a mi juicio es usando un "Rproje
 Es imposible en 20 minutos explicarlo todo, así que seré fundamentalmente práctico: me centraré en el proceso de creación. Es evidente que para entender muchos/todos los detalles y posibilidades en la creación de un package hay que leer algunas referencias. Al final de este tutorial daré referencias donde se explica con distinto nivel de detalle el proceso de creación de un R package.   
 
 
-El tutorial para crear el package puede verse [aquí](https://perezp44.github.io/prueba3/index.html)
+El tutorial para crear el package puede verse [aquí](https://perezp44.github.io/my_crear_website/)
