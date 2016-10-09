@@ -15,10 +15,9 @@ Podemos pensar que es un package es un conjunto de archivos dentro de una carpet
 
 <br>
 
-![](https://raw.githubusercontent.com/perezp44/my_crear_website/master/docs/imagenes/Estructura_final_pkg4albacete.png)
+![](https://github.com/perezp44/my_crear_website/tree/master/docs/imagenes/Estructura_final_pkg4albacete.png)
 
-![](https://perezp44.github.io/my_crear_website/master/docs/imagenes/Estructura_final_pkg4albacete.png)
-
+<br>
 
 ![](./imagenes/Estructura_final_pkg4albacete.png)
 
