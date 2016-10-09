@@ -13,9 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Podemos pensar que es un package es un conjunto de archivos dentro de una carpeta. Veamos la estructura típica de esa carpeta:
 
+
 <br>
 
-![](https://github.com/perezp44/my_crear_website/tree/master/docs/imagenes/Estructura_final_pkg4albacete.png)
+![](imagenes/Estructura_final_pkg4albacete.png)
+
 
 <br>
 

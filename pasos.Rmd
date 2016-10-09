@@ -75,7 +75,7 @@ El contenido inicial de la carpeta `pkg4albacete` es el siguiente:
 
 <br>
 
-![](https://github.com/perezp44/my_crear_website/tree/master/docs/imagenes/contenido_inicial_pkg4albacete.png)
+![](imagenes/contenido_inicial_pkg4albacete.png)
 
 
 <br>
